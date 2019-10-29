@@ -38,7 +38,7 @@ $queryTheDb = function () use ($db) {
 };
 
 $server = new Server([$loggingMiddleware, $queryTheDb]);
-$socket = new \React\Socket\Server('127.0.0.1:8000', $loop);
+$socket = new \React\Socket\Server($params['listen_str'], $loop);
 $server->listen($socket);
 
 echo 'Listening on ' . str_replace('tcp:', 'http:', $socket->getAddress()) . PHP_EOL;
