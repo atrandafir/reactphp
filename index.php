@@ -27,11 +27,14 @@ $loggingMiddleware = function(ServerRequestInterface $request, callable $next) {
 $factory = new Factory($loop);
 $db = $factory->createLazyConnection("{$params['db_user']}:{$params['db_pwd']}@{$params['db_host']}/{$params['db_name']}");
 
-$queryTheDb = function () use ($db) {
+$queryTheDb = function (ServerRequestInterface $request) use ($db) {
     return $db->query('SELECT id, title FROM album limit 50')
         ->then(function (\React\MySQL\QueryResult $queryResult) {
             $users = json_encode($queryResult->resultRows);
             
+            if ($request->getUri()=='http://139.162.172.192:8000/loaderio-7c563bb9293e541f6851af3a9039250d.txt') {
+              return new Response(200, ['Content-type' => 'text/plain'], 'loaderio-7c563bb9293e541f6851af3a9039250d');
+            }
 
             return new Response(200, ['Content-type' => 'application/json'], $users);
         });
